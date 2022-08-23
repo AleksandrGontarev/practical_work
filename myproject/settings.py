@@ -41,7 +41,8 @@ INSTALLED_APPS = [
 
     'myproject',
     'accounts',
-    'crispy_forms'
+    'crispy_forms',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -135,3 +138,9 @@ LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+INTERNAL_IPS = [
+
+    "127.0.0.1",
+
+]
