@@ -15,6 +15,9 @@ urlpatterns = [
     path('comments/', views.CommentListView.as_view(), name='comment-list'),
     path('comments/<int:pk>', views.CommentDetailView.as_view(), name='comment-detail'),
     path('posts/<int:pk>/create_comment/', views.CommentCreateView.as_view(), name='comment-create'),
+    path('posts_update/', views.Post_updateListView.as_view(), name='post_update-list'),
+    path('posts_update/<int:pk>', views.PostUpdateDetailView.as_view(), name='post-detail-update'),
+
     # path('login/', views.LoginView.as_view(), name='login'),
     # path('logout/', views.LogoutView.as_view(), name='logout'),
     # path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),

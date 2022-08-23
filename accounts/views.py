@@ -50,23 +50,55 @@ class PostListView(ListView):
     model = Post
     paginate_by = 2
     ordering = ['title']
+
+
+class PostUpdateDetailView(DetailView):
+    model = Post
+    paginate_by = 2
+    template_name = 'accounts/post_update_detail.html'
+
+
+
+
+class Post_updateListView(LoginRequiredMixin, ListView):
+    model = Post
+    paginate_by = 2
+    ordering = ['title']
+    template_name = 'accounts/post_update_list.html'
     # queryset = Post.objects.select_related("author")
+
+    def get_context_data(self, **kwargs):
+        object_list = Post.objects.filter(author=self.request.user)
+        context = super(Post_updateListView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+    # def get_queryset(self, *args, **kwargs):
+    #     return super.get_queryset(*args, **kwargs).filter(
+    #         owner=self.request.user
+    #     )
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'title', 'short_description', 'full_description', 'image', 'data_post']
 
+    # def form_valid(self, form):
+    #     form.instance.author = self.request.user
+    #     return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'title', 'short_description', 'full_description', 'image', 'data_post']
+    template_name = "accounts/post_update.html"
+
+    def get_context_data(self, **kwargs):
+        object_list = Post.objects.filter(author=self.request.user)
+        context = super(PostUpdateView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-
-class PostUpdateView(UpdateView):
-    pass
-    # model = Post
-    # fields = ['name', 'age']
-    # template_name = "book_store/author_update.html"
+        form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
+        return super(PostUpdateView, self).form_valid(form)
 
 
 class PostDeleteView(DeleteView):

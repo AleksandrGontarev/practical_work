@@ -17,4 +17,8 @@
                     </li>
                 </ul>
             {% endfor %}
+            <form>
+                <button formaction="{% url 'post-update' pk=post.pk%}">Post update</button>
+            </form>
+
 {% endblock %}

@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base1.html'%}
+{% block content %}
+<h1>Update</h1>
+{#      {% for post in object_list %}#}
+{#                <ul>#}
+{#                    <li>#}
+{#                        <a href="{{ post.get_absolute_url }}">{{ post }}</a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            {% endfor %}#}
+<form action="" method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Save" />
+    <p>
+{#     <a href="{% url 'book_store:index'%}"> Home </a>#}
+    </p>
+</form>
+{% endblock %}
