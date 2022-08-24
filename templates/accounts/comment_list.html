@@ -1,6 +1,6 @@
 {% extends 'base1.html' %}
 {% block content %}
-<h1>Comments</h1>
+<h1>Comments {{ object_list.count }}</h1>
 <ul>
     {% for comment in object_list %}
         <li>

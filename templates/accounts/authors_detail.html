@@ -4,7 +4,8 @@
 
 {#    <p>first_name - {{ user.first_name }}</p>#}
 {#    <p>last_name - {{ user.last_name }}</p>#}
-    <p>email - {{ user.email }}</p>
+    <p>email: {{ user.email }}</p>
+    <p>Post:</p>
     {% for post in user.post_set.all %}
         <li>
             <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>

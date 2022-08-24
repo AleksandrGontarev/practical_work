@@ -6,9 +6,9 @@
             <p>full_description - {{ post.full_description }}</p>
             <p>image - {{ post.image }}</p>
               <form>
-                <button formaction="{% url 'comment-create' pk=post.pk%}">Add comment</button>
+                <button formaction="{% url 'comment-create' post.pk%}">Add comment</button>
             </form>
-         <p>Comment:</p>
+         <h3>{{ post.comment_set.count }} comments:</h3>
 
             {% for comment in object_list %}
                 <ul>
@@ -17,8 +17,4 @@
                     </li>
                 </ul>
             {% endfor %}
-            <form>
-                <button formaction="{% url 'post-update' pk=post.pk%}">Post update</button>
-            </form>
-
 {% endblock %}

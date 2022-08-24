@@ -1,0 +1,14 @@
+{% extends 'base1.html' %}
+{% block content %}
+<p>{{ profile.username }}</p>
+    <p>email: {{ profile.email }}</p>
+    <p>First name: {{ profile.first_name }}</p>
+    <p>Last name: {{ profile.Last }}</p>
+    <p>Post:</p>
+    {% for post in profile.post_set.all %}
+        <li>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </li>
+    {% endfor %}
+
+{% endblock %}

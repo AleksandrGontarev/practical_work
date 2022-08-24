@@ -7,7 +7,7 @@ from django.urls import reverse
 class User(AbstractUser):
 
     def get_absolute_url(self):
-        return reverse('user-detail', args=[str(self.pk)])
+        return reverse('authors-detail', args=[str(self.pk)])
 
 
 class Post(models.Model):

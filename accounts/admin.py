@@ -33,8 +33,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('username',)
-    # inlines = [PostInline, ]
+    list_display = ('username', 'text_comment', 'posts')
     list_filter = ['username']
     search_fields = ['username']
 

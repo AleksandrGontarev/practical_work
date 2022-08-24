@@ -4,7 +4,8 @@
 <ul>
     {% for user in object_list %}
         <li>
-            <a href="{% url 'user-detail' user.pk%}"> <p>{{ user.username }}</p></a>
+            <a href="{% url 'authors-detail' pk=user.pk%}"> <p>{{ user.username }}</p></a>
+
         </li>
     {% endfor %}
 </ul>
