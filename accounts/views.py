@@ -1,19 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .forms import UserCreationForm, ContactFrom
 from django.views import View
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, UpdateView
 from django.contrib.auth import authenticate, login
 from .models import Post, Comment, User
 from django.views.generic.edit import CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import MultipleObjectMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import BadHeaderError, send_mail
 from .tasks import send_mail as celery_send_mail
 from .tasks import send_mail_to_user
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def contact_form(request):
@@ -85,35 +84,32 @@ class AuthorsListView(ListView):
     template_name = 'accounts/authors_list.html'
 
 
-# def get_user_profile(request, pk):
-#     user = User.objects.get(pk=pk)
-#     return render(request, 'accounts/authors.html', {"user": user})
-
-
-# class AuthorsDetailView(DetailView):
-#     model = User
-#     template_name = 'accounts/authors.html'
-
-
 def view_user_profile(request, pk):
     user = User.objects.get(pk=pk)
+    page = request.GET.get('page', 1)
+    posts = Post.objects.filter(author=user)
+    paginator = Paginator(posts, 2)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
     return render(request, 'accounts/authors.html', {
-        'profile': user
+        'profile': user,
+        'posts': posts
     })
 
 
-class PostDetailView(DetailView):
+class PostDetailView(DetailView, MultipleObjectMixin):
     model = Post
-    paginate_by = 2
+    paginate_using = Comment
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         object_list = Comment.objects.filter(posts=self.get_object())
         context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
-    # def get_context_data(self, **kwargs):
-    #     object_list = self.object.comment_set.filter(posts=self.get_object())
-    #     context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
-    #     return context
 
 
 class PostListView(ListView):
@@ -140,10 +136,6 @@ class PostUpdateListView(LoginRequiredMixin, ListView):
         object_list = Post.objects.filter(author=self.request.user)
         context = super(PostUpdateListView, self).get_context_data(object_list=object_list, **kwargs)
         return context
-    # def get_queryset(self, *args, **kwargs):
-    #     return super.get_queryset(*args, **kwargs).filter(
-    #         owner=self.request.user
-    #     )
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -152,12 +144,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         subjects = form.cleaned_data.get('author')
-        message = "New post:{title}\n short description: {short}".format(title=form.cleaned_data.get('title'),
-                                                                         short=form.cleaned_data.get(
-                                                                             'short_description'))
+        message = form.cleaned_data.get('title')
         celery_send_mail.delay(subject=subjects, message=message, from_email='my-blog@gmail.com')
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class PostDeleteView(DetailView):
+    pass
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
@@ -173,14 +167,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(PostUpdateView, self).form_valid(form)
-
-
-class PostDeleteView(DeleteView):
-    pass
-    # model = Post
-    # success_url = reverse_lazy("book_store:author-list")
-    # success_message = 'Author Delete Successfully'
-    # template_name = "book_store/author_delete.htm
 
 
 class CommentListView(ListView):

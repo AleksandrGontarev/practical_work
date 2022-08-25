@@ -1,4 +1,3 @@
-from django.contrib.auth import views
 from django.urls import path, include
 from accounts import views
 from django.views.decorators.cache import cache_page
@@ -26,10 +25,4 @@ urlpatterns = [
     path('posts_update/', views.PostUpdateListView.as_view(), name='post_update-list'),
     path('posts_update/<int:pk>', views.PostUpdateDetailView.as_view(), name='post-detail-update'),
 
-    # path('login/', views.LoginView.as_view(), name='login'),
-    # path('logout/', views.LogoutView.as_view(), name='logout'),
-    # path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
-    # path('password-reset/done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    # path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    # path('reset/done/', views.PasswordResetCompleteView.as_view(), name='password_reset_complet'),
 ]

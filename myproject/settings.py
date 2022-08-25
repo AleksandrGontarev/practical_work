@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
 from pathlib import Path
 import os
 from celery.schedules import crontab
@@ -165,6 +164,10 @@ CELERY_BEAT_SCHEDULE = {
     "parsing": {
         "task": "reminder.tasks.parse_news",
         "schedule": crontab(minute=0, hour="1-23/2"),
-        # "schedule": crontab(minute="*/1"),
     }
 }
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

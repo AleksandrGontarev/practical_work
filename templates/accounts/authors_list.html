@@ -1,6 +1,6 @@
 {% extends 'base1.html' %}
 {% block content %}
-<h1>Users</h1>
+<h1>Users: {{page_obj.paginator.count }}</h1>
 <ul>
     {% for user in object_list %}
         <li>

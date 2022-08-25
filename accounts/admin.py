@@ -46,11 +46,3 @@ class CommentAdmin(admin.ModelAdmin):
     def comment_published(self, request, queryset):
         queryset.update(published=True)
     comment_published.short_description = "published"
-
-
-
-
-# admin.site.register(Post)
-
-# admin.site.register(Comment)
-
