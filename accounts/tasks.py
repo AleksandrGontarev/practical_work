@@ -1,8 +1,8 @@
-from time import sleep
+# from time import sleep
 from datetime import datetime
-import requests
-from bs4 import BeautifulSoup
-
+# import requests
+# from bs4 import BeautifulSoup
+from .models import User, Post
 from celery import shared_task
 from django.core.mail import send_mail as django_send_mail
 
@@ -13,7 +13,8 @@ def send_mail(subject, message, from_email):
 
 
 @shared_task
-def send_mail_to_admin():
-    django_send_mail("subject", str(datetime.now()), "noreply@test.com", ['admin@example.com'])
-
+def send_mail_to_user(subject, message, post_id):
+    post = Post.objects.get(id=int(post_id))
+    email = post.author.email
+    django_send_mail(subject, message, "blog_1@gmail.com", [email])
 

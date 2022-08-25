@@ -18,6 +18,7 @@ class Post(models.Model):
     full_description = models.TextField()
     image = models.ImageField(blank=True)
     data_post = models.DateTimeField(default=timezone.now)
+    published = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -34,6 +35,7 @@ class Comment(models.Model):
     username = models.CharField(max_length=200, default='noname user')
     text_comment = models.TextField()
     posts = models.ForeignKey(Post, on_delete=models.CASCADE)
+    published = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text_comment

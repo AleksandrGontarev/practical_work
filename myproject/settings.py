@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_celery_results',
 
     'myproject',
     'accounts',
@@ -124,6 +127,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Add to test email:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -143,7 +149,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -152,3 +157,14 @@ INTERNAL_IPS = [
     "127.0.0.1",
 
 ]
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULE = {
+    "parsing": {
+        "task": "reminder.tasks.parse_news",
+        "schedule": crontab(minute=0, hour="1-23/2"),
+        # "schedule": crontab(minute="*/1"),
+    }
+}

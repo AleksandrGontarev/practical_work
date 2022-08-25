@@ -25,17 +25,29 @@ class UserAdmin(UserAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'short_description', 'full_description', 'image')
+    list_display = ('title', 'author', 'short_description', 'full_description', 'image', 'published', 'data_post')
     inlines = [CommentInline, ]
-    list_filter = ['title', 'author']
+    list_filter = ['title', 'author', 'data_post', 'published']
     search_fields = ['title', 'author']
+    actions = ['comment_published']
+
+    def comment_published(self, request, queryset):
+        queryset.update(published=True)
+    comment_published.short_description = "published"
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('username', 'text_comment', 'posts')
-    list_filter = ['username']
-    search_fields = ['username']
+    list_display = ('username', 'text_comment', 'posts', 'published')
+    list_filter = ['username', 'published', 'posts']
+    search_fields = ['username', 'posts']
+    actions = ['comment_published']
+
+    def comment_published(self, request, queryset):
+        queryset.update(published=True)
+    comment_published.short_description = "published"
+
+
 
 
 # admin.site.register(Post)

@@ -11,8 +11,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.core.mail import BadHeaderError, send_mail
 from .tasks import send_mail as celery_send_mail
+from .tasks import send_mail_to_user
 
 
 def contact_form(request):
@@ -95,7 +96,6 @@ class AuthorsListView(ListView):
 
 
 def view_user_profile(request, pk):
-
     user = User.objects.get(pk=pk)
     return render(request, 'accounts/authors.html', {
         'profile': user
@@ -148,11 +148,16 @@ class PostUpdateListView(LoginRequiredMixin, ListView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'title', 'short_description', 'full_description', 'image', 'data_post']
+    fields = ['title', 'short_description', 'full_description', 'image', 'data_post']
 
-    # def form_valid(self, form):
-    #     form.instance.author = self.request.user
-    #     return super().form_valid(form)
+    def form_valid(self, form):
+        subjects = form.cleaned_data.get('author')
+        message = "New post:{title}\n short description: {short}".format(title=form.cleaned_data.get('title'),
+                                                                         short=form.cleaned_data.get(
+                                                                             'short_description'))
+        celery_send_mail.delay(subject=subjects, message=message, from_email='my-blog@gmail.com')
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
@@ -195,5 +200,12 @@ class CommentCreateView(CreateView):
     fields = ['username', 'text_comment']
 
     def form_valid(self, form):
+        post = str(Post.objects.get(pk=self.kwargs['pk']))
+        subjects = form.cleaned_data.get('username')
+        message = "New comment:{text}\n for post: {post}".format(text=form.cleaned_data.get('text_comment'),
+                                                                 post=form.cleaned_data.get('posts'))
+        celery_send_mail.delay(subject=subjects, message=message, from_email='my-blog@gmail.com')
+
+        send_mail_to_user.delay(subject=subjects, message=message, post_id=post)
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(CommentCreateView, self).form_valid(form)

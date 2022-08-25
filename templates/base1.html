@@ -30,6 +30,9 @@
                 <li class="list-group-item">
                     <a href="{% url 'admin:index' %}">Admin</a>
                 </li>
+                <li class="list-group-item">
+                     <a href="{% url 'contact' %}">Contact Admin</a>
+                </li>
                  <li class="list-group-item">
                      <a href="{% url 'post-list' %}">Posts</a>
                  </li>
@@ -41,9 +44,10 @@
                <ul>
                    <li class="list-group-item">User: {{ user }}</li>
                    <li class="list-group-item"><a href="{% url 'post-create' %}">Post Create</a></li>
-                    <li class="list-group-item"><a href="{% url 'post_update-list' %}">Post Update</a></li>
+                   <li class="list-group-item"><a href="{% url 'post_update-list' %}">My posts</a></li>
+                   <li class="list-group-item"><a href="{% url 'my_profile' %}">Profile</a></li>
                    <li class="list-group-item"><a href="{% url 'logout' %}">Logout</a></li>
-                    <li class="list-group-item"><a href="{% url 'my_profile' %}">Profile</a></li>
+
 
                </ul>
             {% else %}
