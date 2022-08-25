@@ -202,10 +202,11 @@ class CommentCreateView(CreateView):
     def form_valid(self, form):
         post = str(Post.objects.get(pk=self.kwargs['pk']))
         subjects = form.cleaned_data.get('username')
-        message = "New comment:{text}\n for post: {post}".format(text=form.cleaned_data.get('text_comment'),
-                                                                 post=form.cleaned_data.get('posts'))
+        message = "New comment:{text}\n for post_title: {post}".format(text=form.cleaned_data.get('text_comment'),
+                                                                       post=post)
         celery_send_mail.delay(subject=subjects, message=message, from_email='my-blog@gmail.com')
 
-        send_mail_to_user.delay(subject=subjects, message=message, post_id=post)
+        send_mail_to_user.delay(subject=subjects, message=post)
+
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(CommentCreateView, self).form_valid(form)

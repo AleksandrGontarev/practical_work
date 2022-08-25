@@ -13,8 +13,11 @@ def send_mail(subject, message, from_email):
 
 
 @shared_task
-def send_mail_to_user(subject, message, post_id):
-    post = Post.objects.get(id=int(post_id))
+def send_mail_to_user(subject, message):
+    post = Post.objects.get(title=message)
+    title = post.title
+    pk = post.pk
     email = post.author.email
-    django_send_mail(subject, message, "blog_1@gmail.com", [email])
+    link_post = "You have a new comment on the post: {title}\nLink post: http://127.0.0.1:8000/accounts/posts/{pk}".format(pk=pk, title=title)
+    django_send_mail(subject, link_post, "blog_1@gmail.com", [email])
 
