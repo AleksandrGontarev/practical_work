@@ -1,6 +1,8 @@
 from django.urls import path, include
 from accounts import views
 from django.views.decorators.cache import cache_page
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', include('django.contrib.auth.urls')),
@@ -25,4 +27,4 @@ urlpatterns = [
     path('posts_update/', views.PostUpdateListView.as_view(), name='post_update-list'),
     path('posts_update/<int:pk>', views.PostUpdateDetailView.as_view(), name='post-detail-update'),
 
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

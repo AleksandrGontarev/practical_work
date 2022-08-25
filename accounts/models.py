@@ -16,7 +16,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     short_description = models.CharField(max_length=200)
     full_description = models.TextField()
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to='practical_work/media/post', blank=True)
     data_post = models.DateTimeField(default=timezone.now)
     published = models.BooleanField(default=False)
 
