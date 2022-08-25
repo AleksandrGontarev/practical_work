@@ -80,7 +80,7 @@ class UserProfile(LoginRequiredMixin, DetailView):
 
 class AuthorsListView(ListView):
     model = User
-    paginate_by = 2
+    paginate_by = 10
     template_name = 'accounts/authors_list.html'
 
 
@@ -88,7 +88,7 @@ def view_user_profile(request, pk):
     user = User.objects.get(pk=pk)
     page = request.GET.get('page', 1)
     posts = Post.objects.filter(author=user)
-    paginator = Paginator(posts, 2)
+    paginator = Paginator(posts, 10)
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -104,7 +104,7 @@ def view_user_profile(request, pk):
 class PostDetailView(DetailView, MultipleObjectMixin):
     model = Post
     paginate_using = Comment
-    paginate_by = 3
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         object_list = Comment.objects.filter(posts=self.get_object())
@@ -114,20 +114,20 @@ class PostDetailView(DetailView, MultipleObjectMixin):
 
 class PostListView(ListView):
     model = Post
-    paginate_by = 2
+    paginate_by = 10
     ordering = ['title']
     queryset = Post.objects.select_related('author').prefetch_related('comment_set')
 
 
 class PostUpdateDetailView(DetailView):
     model = Post
-    paginate_by = 2
+    paginate_by = 10
     template_name = 'accounts/post_update_detail.html'
 
 
 class PostUpdateListView(LoginRequiredMixin, ListView):
     model = Post
-    paginate_by = 2
+    paginate_by = 10
     ordering = ['title']
     template_name = 'accounts/post_update_list.html'
     queryset = Post.objects.select_related('author')
@@ -171,7 +171,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
 class CommentListView(ListView):
     model = Comment
-    paginate_by = 2
+    paginate_by = 10
     ordering = ['text_comment']
     queryset = Comment.objects.select_related('posts')
 

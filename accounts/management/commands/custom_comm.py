@@ -28,4 +28,3 @@ class Command(BaseCommand):
                 comments = [Comment(username=fake.name(), text_comment=fake.sentence(50),
                                     posts=post)]
                 Comment.objects.bulk_create(comments)
-
