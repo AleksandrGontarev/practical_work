@@ -37,3 +37,8 @@ def send_mail_comment(subject, message, from_email):
                                                         text=comment.text_comment, author=comment.username,
                                                         post=post)
     django_send_mail(subject, message_email, from_email, ['admin@example.com'])
+
+
+@shared_task
+def send_mail_contact(subject, message, from_email):
+    django_send_mail(subject, message, from_email, ['admin@example.com'])

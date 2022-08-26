@@ -11,7 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .tasks import send_mail as celery_send_mail
-from .tasks import send_mail_to_user, send_mail_comment
+from .tasks import send_mail_to_user, send_mail_comment, send_mail_contact
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -22,7 +22,7 @@ def contact_form(request):
             subject = form.cleaned_data['subject']
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
-            celery_send_mail.delay(subject, message, from_email)
+            send_mail_contact.delay(subject, message, from_email)
             messages.add_message(request, messages.SUCCESS, 'Message sent')
             return redirect('contact')
     else:
