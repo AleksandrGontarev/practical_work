@@ -11,7 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .tasks import send_mail as celery_send_mail
-from .tasks import send_mail_to_user
+from .tasks import send_mail_to_user, send_mail_comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -188,11 +188,12 @@ class CommentCreateView(CreateView):
     def form_valid(self, form):
         post = str(Post.objects.get(pk=self.kwargs['pk']))
         subjects = form.cleaned_data.get('username')
-        message = "New comment:{text}\n for post_title: {post}".format(text=form.cleaned_data.get('text_comment'),
-                                                                       post=post)
-        celery_send_mail.delay(subject=subjects, message=message, from_email='my-blog@gmail.com')
+        comment = form.cleaned_data.get('text_comment')
+
+        send_mail_comment.delay(subject=post, message=comment, from_email='my-blog@gmail.com')
 
         send_mail_to_user.delay(subject=subjects, message=post)
+
 
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(CommentCreateView, self).form_valid(form)
