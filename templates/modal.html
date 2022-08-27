@@ -1,6 +1,6 @@
 
-<form method="post" action="">
-  {% csrf_token %}
+
+
 <div class="modal fade" id="contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -8,17 +8,61 @@
         <h5 class="modal-title" id="exampleModalLabel">Contact Admin</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+         <form id="contactForm" method="post" action="{% url 'contact' %}" class="js-book-create-form">
+              <div class="modal-body">
+                    {{ contact }}
+                    {% csrf_token %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <div class="form-actions">
 
-      <div class="modal-body">
-        {{ contact }}
-      </div>
+                        <button type="submit" class="btn btn-secondary" data-url="{% url 'contact' %}">Send Email</button>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Send email</button>
-      </div>
-
+                  </div>
+              </div>
+        </form>
     </div>
   </div>
 </div>
-</form>
+{#  {% block javascript %}#}
+{#  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+
+{#  <script>#}
+{#      $(document).ready(function () {#}
+{#          // отслеживаем событие отправки формы#}
+{#          $('#contactForm').keyup(function () {#}
+{#              // создаем AJAX-вызов#}
+{#              $.ajax({#}
+{##}
+{#                  type: this.method,#}
+{#                url: this.action,#}
+{#                data: $(this).serialize(),#}
+{#            // headers: {'X-CSRFToken': getCookie('csrftoken')},#}
+{#                dataType: 'json',#}
+                  {#data: $(this).serialize(), // получаяем данные формы#}
+                  {#url: "{% url 'contact' %}",#}
+                  {#dataType: 'json',#}
+                  {#// если успешно, то#}
+{#                  success: function (response) {#}
+{#                      if (response.is_taken === true) {#}
+{#                          $('#contactForm').removeClass('is-valid').addClass('is-invalid');#}
+{#                      }#}
+{#                      else {#}
+{#                          $('#contactForm').removeClass('is-invalid').addClass('is-valid');#}
+{##}
+{#                      }#}
+{#                  },#}
+{#                  // если ошибка, то#}
+{#                  error: function (response) {#}
+{#                      // предупредим об ошибке#}
+{#                      console.log(response.responseJSON.errors)#}
+{#                  }#}
+{#              });#}
+{#              return false;#}
+{#          });#}
+{#      })#}
+{#  </script>#}
+{#{% endblock javascript %}#}
+
+

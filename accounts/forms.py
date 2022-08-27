@@ -22,9 +22,9 @@ class UserCreationForm(UserCreationForm):
 
 
 class ContactFrom(forms.Form):
-    from_email = forms.EmailField(required=True)
-    subject = forms.CharField(required=True)
-    message = forms.CharField(widget=forms.Textarea, required=True)
+    from_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=True)
+    subject = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=True)
 
     def clean_from_email(self):
         data = self.cleaned_data['from_email']
