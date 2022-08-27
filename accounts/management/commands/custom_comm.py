@@ -12,7 +12,7 @@ class Command(BaseCommand):
         fake = Faker()
 
         users = [User(username=fake.name(), password=fake.password(), email=fake.email(),
-                      last_name=fake.last_name(), first_name=fake.first_name()) for _ in range(20)]
+                      last_name=fake.last_name(), first_name=fake.first_name()) for _ in range(5)]
         User.objects.bulk_create(users)
 
         for user in User.objects.all():
@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 Post.objects.bulk_create(posts)
 
         for post in Post.objects.all():
-            for i in range(20):
+            for i in range(10):
                 comments = [Comment(username=fake.name(), text_comment=fake.sentence(50),
                                     posts=post)]
                 Comment.objects.bulk_create(comments)
