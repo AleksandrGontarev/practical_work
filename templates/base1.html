@@ -2,9 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+          integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+          crossorigin="anonymous"></script>
+
     <title>User authenticate</title>
 </head>
+
+
+{% load static %}
+
+{% block extra_js %}
+  <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
+
+
 <body>
 <div class="container-fluid">
     {% if messages %}
@@ -39,9 +58,7 @@
                 <li class="list-group-item">
                     <a href="{% url 'authors-list' %}">Users</a>
                 </li>
-                <li class="list-group-item">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#contact">Contact</a>
-                </li>
+
             </ul>
             {% if request.user.is_authenticated %}
                <ul>
@@ -58,6 +75,15 @@
                     <li class="list-group-item">
                         <a href="{% url 'login' %}">Login</a> | <a href="{%url 'register' %}">Register</a>
                     </li>
+                 <li class="list-group-item">
+                     <button type="button" class="btn btn-info js-create-form"
+                             data-bs-toggle="modal" data-bs-target="#contact"
+                             data-url="{% url 'contact' %}">
+
+                         Contact Admin
+
+                     </button>
+                </li>
                 </ul>
             {% endif %}
         </div>
@@ -83,7 +109,18 @@
                     {% endblock %}
           </div>
       </div>
-{% include 'modal.html' %}
+
+
+
+<div class="modal fade" id="contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+{#{% include 'modal.html' %}#}
+
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

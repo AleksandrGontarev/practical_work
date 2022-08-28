@@ -1,16 +1,13 @@
 
 
 
-<div class="modal fade" id="contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Contact Admin</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-         <form id="contactForm" method="post" action="{% url 'contact' %}" class="js-book-create-form">
+    </div>
+     <form id="contactModal" method="post" action="{% url 'contact' %}">
               <div class="modal-body">
-                    {{ contact }}
+                    {{ contact_form }}
                     {% csrf_token %}
               </div>
               <div class="modal-footer">
@@ -22,47 +19,3 @@
                   </div>
               </div>
         </form>
-    </div>
-  </div>
-</div>
-{#  {% block javascript %}#}
-{#  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-
-{#  <script>#}
-{#      $(document).ready(function () {#}
-{#          // отслеживаем событие отправки формы#}
-{#          $('#contactForm').keyup(function () {#}
-{#              // создаем AJAX-вызов#}
-{#              $.ajax({#}
-{##}
-{#                  type: this.method,#}
-{#                url: this.action,#}
-{#                data: $(this).serialize(),#}
-{#            // headers: {'X-CSRFToken': getCookie('csrftoken')},#}
-{#                dataType: 'json',#}
-                  {#data: $(this).serialize(), // получаяем данные формы#}
-                  {#url: "{% url 'contact' %}",#}
-                  {#dataType: 'json',#}
-                  {#// если успешно, то#}
-{#                  success: function (response) {#}
-{#                      if (response.is_taken === true) {#}
-{#                          $('#contactForm').removeClass('is-valid').addClass('is-invalid');#}
-{#                      }#}
-{#                      else {#}
-{#                          $('#contactForm').removeClass('is-invalid').addClass('is-valid');#}
-{##}
-{#                      }#}
-{#                  },#}
-{#                  // если ошибка, то#}
-{#                  error: function (response) {#}
-{#                      // предупредим об ошибке#}
-{#                      console.log(response.responseJSON.errors)#}
-{#                  }#}
-{#              });#}
-{#              return false;#}
-{#          });#}
-{#      })#}
-{#  </script>#}
-{#{% endblock javascript %}#}
-
-

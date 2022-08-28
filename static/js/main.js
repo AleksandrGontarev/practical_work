@@ -9,11 +9,11 @@ $(function () {
       type: 'get',
       dataType: 'json',
       beforeSend: function () {
-        $("#modal-book .modal-content").html("");
-        $("#modal-book").modal("show");
+        $("#contact .modal-content").html("");
+        $("#contact").modal("show");
       },
       success: function (data) {
-        $("#modal-book .modal-content").html(data.html_form);
+        $("#contact .modal-content").html(data.html_form);
       }
     });
   };
@@ -42,15 +42,15 @@ $(function () {
   /* Binding */
 
   // Create book
-  $(".js-create-book").click(loadForm);
+  $(".js-create-form").click(loadForm);
   $("#modal-book").on("submit", ".js-book-create-form", saveForm);
 
-  // Update book
-  $("#book-table").on("click", ".js-update-book", loadForm);
-  $("#modal-book").on("submit", ".js-book-update-form", saveForm);
-
-  // Delete book
-  $("#book-table").on("click", ".js-delete-book", loadForm);
-  $("#modal-book").on("submit", ".js-book-delete-form", saveForm);
+  // // Update book
+  // $("#book-table").on("click", ".js-update-book", loadForm);
+  // $("#modal-book").on("submit", ".js-book-update-form", saveForm);
+  //
+  // // Delete book
+  // $("#book-table").on("click", ".js-delete-book", loadForm);
+  // $("#modal-book").on("submit", ".js-book-delete-form", saveForm);
 
 });
