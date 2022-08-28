@@ -24,7 +24,6 @@ def contact_form(request):
     if request.method == "POST":
         form = ContactFrom(request.POST)
         if form.is_valid():
-            # subject = form.cleaned_data['subject']
             subject = form.cleaned_data['subject']
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
@@ -33,7 +32,7 @@ def contact_form(request):
             data['html_contact'] = render_to_string('modal.html', {
                 'form': form})
             # return redirect('home')
-            return JsonResponse({'form': "Ok"})
+            return JsonResponse({'form': form})
     else:
         form = ContactFrom()
         data['form_is_valid'] = False
