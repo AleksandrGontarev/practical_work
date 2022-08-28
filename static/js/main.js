@@ -27,11 +27,11 @@ $(function () {
       dataType: 'json',
       success: function (data) {
         if (data.form_is_valid) {
-          $("#book-table tbody").html(data.html_book_list);
-          $("#modal-book").modal("hide");
+          $("#contact .modal-content").html(data.html_contact)
+          $("#contact").modal("show");
         }
         else {
-          $("#modal-book .modal-content").html(data.html_form);
+          $("#contact .modal-content").html(data.html_form);
         }
       }
     });
@@ -42,8 +42,8 @@ $(function () {
   /* Binding */
 
   // Create book
-  $(".js-create-form").click(loadForm);
-  $("#modal-book").on("submit", ".js-book-create-form", saveForm);
+  $(".js-contact").click(loadForm);
+  $("#contact").on("submit", ".jx-jx", saveForm);
 
   // // Update book
   // $("#book-table").on("click", ".js-update-book", loadForm);

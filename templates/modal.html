@@ -1,20 +1,23 @@
 
 
-
+<form method="post" action="{% url 'contact' %}" class="jx-jx">
+    {% csrf_token %}
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Contact Admin</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-     <form id="contactModal" method="post" action="{% url 'contact' %}">
+    <div class="alert alert-info d-none" role="alert"></div>
+
               <div class="modal-body">
-                    {{ contact_form }}
-                    {% csrf_token %}
+
+                    {{ form }}
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   <div class="form-actions">
 
-                        <button type="submit" class="btn btn-secondary" data-url="{% url 'contact' %}">Send Email</button>
+                        <button type="submit" class="btn btn-secondary">Send Email</button>
 
                   </div>
               </div>
