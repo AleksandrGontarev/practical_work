@@ -108,7 +108,7 @@ class PostDetailView(DetailView, MultipleObjectMixin):
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
-        object_list = Comment.objects.filter(posts=self.get_object())
+        object_list = Comment.objects.filter(published=True, posts=self.get_object())
         context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
 
