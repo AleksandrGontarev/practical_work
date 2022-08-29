@@ -29,13 +29,14 @@ def contact_form(request):
             message = form.cleaned_data['message']
             send_mail_contact.delay(subject, message, from_email)
             messages.add_message(request, messages.SUCCESS, 'Message sent')
-            data['html_contact'] = render_to_string('modal.html', {
-                'form': form})
+            data['html_contact'] = render_to_string('modal.html', context={
+                'form': form}, request=request)
             # return redirect('home')
-            return JsonResponse({'form': form})
+            return JsonResponse(data)
     else:
         form = ContactFrom()
         data['form_is_valid'] = False
+
     context = {'form': form}
     data['html_form'] = render_to_string('modal.html', context, request=request)
 
