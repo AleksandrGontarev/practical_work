@@ -28,12 +28,9 @@ $(function () {
       success: function (data) {
 
         if (data.form_is_valid) {
-               // $("#contact").fadeOut("fast", function(){
-               //    $(this).before("<strong>Email send :)</strong>");
-               //
-               // });
+
           $("#contact .modal-content").html(data.html_contact)
-          $("#contact").modal("show");
+          $("#contact").modal("hide");
 
         }
         else {
@@ -49,7 +46,7 @@ $(function () {
 
   // Create book
   $(".js-contact").click(loadForm);
-  $(".ajax-modal").on("submit", ".jx-jx", saveForm);
+  $("#contact").on("submit", ".jx-jx", saveForm);
 
 
 });
