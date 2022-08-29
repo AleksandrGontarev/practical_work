@@ -13,9 +13,14 @@ from django.contrib import messages
 from .tasks import send_mail as celery_send_mail
 from .tasks import send_mail_to_user, send_mail_comment, send_mail_contact
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 
 
+@csrf_exempt
 def contact_form(request):
+    data = dict()
     if request.method == "POST":
         form = ContactFrom(request.POST)
         if form.is_valid():
@@ -24,16 +29,25 @@ def contact_form(request):
             message = form.cleaned_data['message']
             send_mail_contact.delay(subject, message, from_email)
             messages.add_message(request, messages.SUCCESS, 'Message sent')
-            return redirect('contact')
+            data['html_contact'] = render_to_string('modal.html', context={
+                'form': form}, request=request)
+            # return redirect('home')
+            return JsonResponse(data)
     else:
         form = ContactFrom()
-    return render(
-        request,
-        "accounts/contact.html",
-        context={
-            "form": form,
-        }
-    )
+        data['form_is_valid'] = False
+
+    context = {'form': form}
+    data['html_form'] = render_to_string('modal.html', context, request=request)
+
+    return JsonResponse(data)
+
+
+
+
+
+
+
 
 
 class Register(View):
@@ -193,7 +207,6 @@ class CommentCreateView(CreateView):
         send_mail_comment.delay(subject=post, message=comment, from_email='my-blog@gmail.com')
 
         send_mail_to_user.delay(subject=subjects, message=post)
-
 
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(CommentCreateView, self).form_valid(form)
