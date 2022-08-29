@@ -26,10 +26,9 @@ $(function () {
       type: form.attr("method"),
       dataType: 'json',
       success: function (data) {
-        if (data.form_is_valid) {
-          $("#contact .modal-content").html(data.html_contact);
+        if (data) {
           $("#contact").modal("hide");
-          // $(".container-fluid").prepend(data.message.tags);
+          $(".container-fluid").prepend(data.html_contact_msg);
         }
         else {
           $("#contact .modal-content").html(data.html_form);

@@ -9,16 +9,13 @@ from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.contrib import messages
 from .tasks import send_mail as celery_send_mail
 from .tasks import send_mail_to_user, send_mail_comment, send_mail_contact
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_exempt
 
 
-# @csrf_exempt
 def contact_form(request):
     data = dict()
     if request.method == "POST":
@@ -28,10 +25,8 @@ def contact_form(request):
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
             send_mail_contact.delay(subject, message, from_email)
-            messages.add_message(request, messages.SUCCESS, 'Message sent')
-            data['html_contact'] = render_to_string('modal.html', context={
-                'form': form}, request=request)
-            return JsonResponse(data)
+            msg = ['Congratulations. Message sent !!!']
+            data['html_contact_msg'] = render_to_string('base_2.html', {'messages': msg})
     else:
         form = ContactFrom()
         data['form_is_valid'] = False
@@ -40,13 +35,6 @@ def contact_form(request):
     data['html_form'] = render_to_string('modal.html', context, request=request)
 
     return JsonResponse(data)
-
-
-
-
-
-
-
 
 
 class Register(View):
