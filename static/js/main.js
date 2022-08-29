@@ -26,12 +26,10 @@ $(function () {
       type: form.attr("method"),
       dataType: 'json',
       success: function (data) {
-
         if (data.form_is_valid) {
-
-          $("#contact .modal-content").html(data.html_contact)
+          $("#contact .modal-content").html(data.html_contact);
           $("#contact").modal("hide");
-
+          // $(".container-fluid").prepend(data.message.tags);
         }
         else {
           $("#contact .modal-content").html(data.html_form);
@@ -40,6 +38,13 @@ $(function () {
     });
     return false;
   };
+
+
+
+
+
+
+
 
 
   /* Binding */

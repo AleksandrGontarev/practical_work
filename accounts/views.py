@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 
 
-@csrf_exempt
+# @csrf_exempt
 def contact_form(request):
     data = dict()
     if request.method == "POST":
@@ -31,7 +31,6 @@ def contact_form(request):
             messages.add_message(request, messages.SUCCESS, 'Message sent')
             data['html_contact'] = render_to_string('modal.html', context={
                 'form': form}, request=request)
-            # return redirect('home')
             return JsonResponse(data)
     else:
         form = ContactFrom()
