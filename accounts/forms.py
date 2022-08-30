@@ -13,7 +13,8 @@ class UserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label=gettext_lazy("Email"),
         max_length=254,
-        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+        widget=forms.EmailInput(attrs={"autocomplete": "email",
+                                       }),
     )
 
     class Meta(UserCreationForm.Meta):
