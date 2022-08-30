@@ -9,13 +9,15 @@ from django.views.generic.list import MultipleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.contrib import messages
 from .tasks import send_mail as celery_send_mail
 from .tasks import send_mail_to_user, send_mail_comment, send_mail_contact
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 def contact_form(request):
+    data = dict()
     if request.method == "POST":
         form = ContactFrom(request.POST)
         if form.is_valid():
@@ -23,17 +25,16 @@ def contact_form(request):
             from_email = form.cleaned_data['from_email']
             message = form.cleaned_data['message']
             send_mail_contact.delay(subject, message, from_email)
-            messages.add_message(request, messages.SUCCESS, 'Message sent')
-            return redirect('contact')
+            msg = ['Congratulations. Message sent !!!']
+            data['html_contact_msg'] = render_to_string('base_2.html', {'messages': msg})
     else:
         form = ContactFrom()
-    return render(
-        request,
-        "accounts/contact.html",
-        context={
-            "form": form,
-        }
-    )
+        data['form_is_valid'] = False
+
+    context = {'form': form}
+    data['html_form'] = render_to_string('modal.html', context, request=request)
+
+    return JsonResponse(data)
 
 
 class Register(View):
@@ -112,6 +113,7 @@ class PostDetailView(DetailView):
     #     return context
 
     def get_context_data(self, **kwargs):
+
         comments = Comment.objects.filter(published=True, posts=self.get_object())
         paginator = Paginator(comments, 5)
         page_num = int(self.request.GET.get('page', 1))
@@ -127,6 +129,7 @@ class PostDetailView(DetailView):
             comments = paginator.page(1)
         except EmptyPage:
             comments = paginator.page(paginator.num_pages)
+
         return context
 
 
@@ -229,7 +232,6 @@ class CommentCreateView(CreateView):
         send_mail_comment.delay(subject=post, message=comment, from_email='my-blog@gmail.com')
 
         send_mail_to_user.delay(subject=subjects, message=post)
-
 
         form.instance.posts = Post.objects.get(pk=self.kwargs['pk'])
         return super(CommentCreateView, self).form_valid(form)
