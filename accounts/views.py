@@ -101,14 +101,32 @@ def view_user_profile(request, pk):
     })
 
 
-class PostDetailView(DetailView, MultipleObjectMixin):
+class PostDetailView(DetailView):
     model = Post
-    paginate_using = Comment
-    paginate_by = 10
+    # paginate_using = Comment
+    # paginate_by = 10
+    #
+    # def get_context_data(self, **kwargs):
+    #     object_list = Comment.objects.filter(posts=self.get_object())
+    #     context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
+    #     return context
 
     def get_context_data(self, **kwargs):
-        object_list = Comment.objects.filter(posts=self.get_object())
-        context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        comments = Comment.objects.filter(published=True, posts=self.get_object())
+        paginator = Paginator(comments, 5)
+        page_num = int(self.request.GET.get('page', 1))
+        page = paginator.page(page_num)
+        context = super().get_context_data(**kwargs)
+        context['comments'] = comments
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = True
+        try:
+            comments = paginator.page(page)
+        except PageNotAnInteger:
+            comments = paginator.page(1)
+        except EmptyPage:
+            comments = paginator.page(paginator.num_pages)
         return context
 
 
@@ -123,6 +141,24 @@ class PostUpdateDetailView(DetailView):
     model = Post
     paginate_by = 10
     template_name = 'accounts/post_update_detail.html'
+
+    def get_context_data(self, **kwargs):
+        comments = Comment.objects.filter(posts=self.get_object())
+        paginator = Paginator(comments, 5)
+        page_num = int(self.request.GET.get('page', 1))
+        page = paginator.page(page_num)
+        context = super().get_context_data(**kwargs)
+        context['comments'] = comments
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = True
+        try:
+            comments = paginator.page(page)
+        except PageNotAnInteger:
+            comments = paginator.page(1)
+        except EmptyPage:
+            comments = paginator.page(paginator.num_pages)
+        return context
 
 
 class PostUpdateListView(LoginRequiredMixin, ListView):
