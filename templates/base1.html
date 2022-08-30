@@ -49,14 +49,9 @@
                 <li class="list-group-item">
                     <a href="{% url 'admin:index' %}">Admin</a>
                 </li>
-{#                <li class="list-group-item">#}
-{#                     <a href="{% url 'contact' %}">Contact Admin</a>#}
-{#                </li>#}
                  <li class="list-group-item">
                      <a href="{% url 'post-list' %}">Posts</a>
                  </li>
-
-                <li class="list-group-item"><a href="{% url 'authors-list' %}">Users</a></li>
                 <li class="list-group-item">
                     <a href="{% url 'authors-list' %}">Users</a>
                 </li>
@@ -75,7 +70,6 @@
                    <li class="list-group-item"><a href="{% url 'post_update-list' %}">My posts</a></li>
                    <li class="list-group-item"><a href="{% url 'my_profile' %}">Profile</a></li>
                    <li class="list-group-item"><a href="{% url 'logout' %}">Logout</a></li>
-
 
 
                </ul>
@@ -111,7 +105,7 @@
       </div>
 
 
-<div class="modal fade" id="contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="contact" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="false">
   <div class="modal-dialog">
     <div class="modal-content">
 

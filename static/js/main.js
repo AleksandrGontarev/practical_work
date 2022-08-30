@@ -1,7 +1,5 @@
 $(function () {
-
   /* Functions */
-
   var loadForm = function () {
     var btn = $(this);
     $.ajax({
@@ -26,9 +24,10 @@ $(function () {
       type: form.attr("method"),
       dataType: 'json',
       success: function (data) {
-        if (data) {
-          $("#contact").modal("hide");
+        if (data.form_is_valid) {
+          // $("#contact").modal("hide");
           $(".container-fluid").prepend(data.html_contact_msg);
+          $("#contact").modal("hide");
         }
         else {
           $("#contact .modal-content").html(data.html_form);
@@ -37,20 +36,7 @@ $(function () {
     });
     return false;
   };
-
-
-
-
-
-
-
-
-
   /* Binding */
-
-  // Create book
   $(".js-contact").click(loadForm);
   $("#contact").on("submit", ".jx-jx", saveForm);
-
-
 });

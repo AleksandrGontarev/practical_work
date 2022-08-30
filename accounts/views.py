@@ -27,6 +27,8 @@ def contact_form(request):
             send_mail_contact.delay(subject, message, from_email)
             msg = ['Congratulations. Message sent !!!']
             data['html_contact_msg'] = render_to_string('base_2.html', {'messages': msg})
+            data['form_is_valid'] = True
+
     else:
         form = ContactFrom()
         data['form_is_valid'] = False
