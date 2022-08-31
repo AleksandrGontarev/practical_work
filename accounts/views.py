@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import UserCreationForm, ContactFrom
 from django.views import View
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.views.generic.edit import FormView
 from django.contrib.auth import authenticate, login
 from .models import Post, Comment, User
 from django.views.generic.edit import CreateView
@@ -39,25 +40,29 @@ def contact_form(request):
     return JsonResponse(data)
 
 
-class Register(View):
+class Register(FormView):
     template_name = 'registration/register.html'
+    form_class = UserCreationForm
 
-    def get(self, request):
-        context = {'form': UserCreationForm()}
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        form = UserCreationForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('home')
-        context = {'form': form}
-        return render(request, self.template_name, context)
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
+    # def get(self, request):
+    #     context = {'form': UserCreationForm()}
+    #     return render(request, self.template_name, context)
+    #
+    # def post(self, request):
+    #     form = UserCreationForm(request.POST)
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #         username = form.cleaned_data.get('username')
+    #         password = form.cleaned_data.get('password1')
+    #         user = authenticate(username=username, password=password)
+    #         login(request, user)
+    #         return redirect('home')
+    #     context = {'form': form}
+    #     return render(request, self.template_name, context)
 
 
 class UpdateProfile(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -106,13 +111,6 @@ def view_user_profile(request, pk):
 
 class PostDetailView(DetailView):
     model = Post
-    # paginate_using = Comment
-    # paginate_by = 10
-    #
-    # def get_context_data(self, **kwargs):
-    #     object_list = Comment.objects.filter(posts=self.get_object())
-    #     context = super(PostDetailView, self).get_context_data(object_list=object_list, **kwargs)
-    #     return context
 
     def get_context_data(self, **kwargs):
 
@@ -142,7 +140,7 @@ class PostListView(ListView):
     queryset = Post.objects.select_related('author').prefetch_related('comment_set')
 
 
-class PostUpdateDetailView(DetailView):
+class PostUpdateDetailView(LoginRequiredMixin, DetailView):
     model = Post
     paginate_by = 10
     template_name = 'accounts/post_update_detail.html'
@@ -191,14 +189,21 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostDeleteView(DetailView):
-    pass
+class PostDeleteView(DeleteView):
+    model = Post
+    queryset = Post.objects.select_related('author')
+
+    def get_context_data(self, **kwargs):
+        object_list = Post.objects.filter(author=self.request.user)
+        context = super(PostDeleteView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['title', 'title', 'short_description', 'full_description', 'image', 'data_post']
     template_name = "accounts/post_update.html"
+    queryset = Post.objects.select_related('author')
 
     def get_context_data(self, **kwargs):
         object_list = Post.objects.filter(author=self.request.user)
@@ -219,7 +224,6 @@ class CommentListView(ListView):
 
 class CommentDetailView(DetailView):
     model = Comment
-    paginate_by = 2
 
 
 class CommentCreateView(CreateView):

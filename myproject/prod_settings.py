@@ -47,11 +47,6 @@ INSTALLED_APPS = [
 
 ]
 
-if DEBUG:
-    INSTALLED_APPS += [
-        "debug_toolbar",
-
-    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,10 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
-if DEBUG:
-    MIDDLEWARE += [
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ]
+
 ROOT_URLCONF = 'myproject.urls'
 
 TEMPLATES = [
@@ -93,7 +85,8 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        "NAME": os.environ.get("BASE_DIR", "db.sqlite3"),
     }
 }
 
@@ -158,7 +151,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 
 ]
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_RESULT_BACKEND = 'django-db'
@@ -169,7 +162,3 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
-try:
-    from prod_settings import *
-except ImportError:
-    pass
