@@ -4,8 +4,8 @@ from faker import Faker
 
 
 class Command(BaseCommand):
-    help = 'This command is for inserting Author, Book, Publisher, Store into database.Insert 10, Authors, ' \
-           '10 Publishers, 100 Books, 10 Stores. '
+    help = 'This command is for inserting User, Post, Comment into database.Insert 5 Users, ' \
+           '10 Posts, 10 Comments. '
 
     def handle(self, *args, **options):
 

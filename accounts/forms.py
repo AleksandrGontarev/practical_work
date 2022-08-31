@@ -21,6 +21,9 @@ class UserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email']
 
+    def send_email(self):
+        pass
+
 
 class ContactFrom(forms.Form):
     from_email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=True)
